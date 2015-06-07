@@ -3,11 +3,11 @@
 
 import inc
 
-v = 'aaa'
-print v
+def f(eee):
+	for i in ['aaa','bbb','ccc']:
+		if i == eee:
+			return 'rrr'
+	return 'nothing'
 
-def f(v,b):
-	print v
-	print b
 
-f('ooo','bbb')
+print f('aaa')
