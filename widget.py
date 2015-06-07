@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#/usr/bin/python
 #-*- coding:utf-8 -*-
 
 import ConfigParser
@@ -7,9 +7,10 @@ import dbm
 import commands
 import base64
 import sys
+import cx_Oracle
 
 #get config,dbm and logger
-def getfiles(flag):
+def getFiles(flag):
 	path_conf_global = sys.path[0] + '/conf/global.conf'
 	path_conf = sys.path[0] + '/conf/' + flag + '.conf'
 	path_log  = sys.path[0] + '/log/' + flag + '.log'
@@ -44,12 +45,12 @@ def encrypt(string):
 
 #get slink from config file
 conf,data,logger = getfiles('global')
-def getslink():
+def getSlink():
 	return conf.get('server','slink')
 
 
 #if a model can run
-def verifymac():
+def verifyMac():
 	cf_verify = ConfigParser.ConfigParser()
 	cf_verify.read(sys.path[0] + '/conf/verify.conf')
 	mac = decrypt(cf_verify.get("mac", "mac"))
@@ -66,11 +67,75 @@ def verifymac():
 	else:
 		return True
 
-def verifyenable(flag):
+def verifyEnable(flag):
 	if conf.getboolean('enable','global') != True:
 		return False
 	if conf.getboolean('enable',flag) != True:
                 return False
-	if verifymac() != True:
+	if verifyMac() != True:
                 return False
 	return True
+
+
+#verify a node link in base mode
+def getValue(data,key,default):
+	for i in data.keys():
+		if i == key:
+			return data[i]
+	return default
+
+def closeNode(conf_path,node):
+        cf = ConfigParser.ConfigParser()
+        cf.read(conf_path)
+	enable = encrypt('False')
+	cf.set(node,'enable',enable)
+        cf.write(open(conffile,"w"))
+
+
+def baseNode(flag,conf,node):
+	conf_path = sys.path[0] + '/conf/' + flag + '.conf'
+
+	enable = decrypt(conf.get(node,'enable')).upper()
+	if enable != 'TRUE':
+		return False,'False'
+
+	tnsname = decrypt(conf.get(node,'tnsname')).lower()
+	try:
+		db = cx_Oracle.connect(tnsname)
+	except:
+		failCount = getValue(data,'failCount',0) + 1
+		if failCount >= 3:
+			closeNode(conf_path,node)
+		data['failCount'] = failCount
+
+		logger.error('can\'t connect to node,error is : ' + sys.exc_info() + '.\nDetail is : ' + sys.exc_info()[1])
+		return False,'False'
+	else:
+		data['failCount'] = 0
+
+
+	sql_dbid = 'select dbid from v$database'
+	sql_inum = 'select INSTANCE_NUMBER from v$instance'
+	cursor = db.cursor()
+
+	cursor.execute(sql_dbid)
+	dbid_node = cursor.fetchone()
+	dbid_conf = decrypt(conf.get(node,'dbid')).lower()
+	if dbid_node != dbid_conf:
+		closeNode(conf_path,node)
+		return False,'False'
+
+	cursor.execute(sql_ins)
+	inum_node = cursor.fetchone()
+	inum_conf = decrypt(conf.get(node,'instance_num')).lower()
+	if inum_node != inum_conf:
+		closeNode(conf_path,node)
+		return False,'False'
+
+	return True,db
+
+
+
+
+
+
