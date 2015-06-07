@@ -44,7 +44,7 @@ def encrypt(string):
 
 
 #get slink from config file
-conf,data,logger = getfiles('global')
+conf,data,logger = getFiles('global')
 def getSlink():
 	return conf.get('server','slink')
 
@@ -89,7 +89,7 @@ def closeNode(conf_path,node):
         cf.read(conf_path)
 	enable = encrypt('False')
 	cf.set(node,'enable',enable)
-        cf.write(open(conffile,"w"))
+        cf.write(open(conf_path,"w"))
 
 
 def baseNode(flag,conf,node):
@@ -97,21 +97,21 @@ def baseNode(flag,conf,node):
 
 	enable = decrypt(conf.get(node,'enable')).upper()
 	if enable != 'TRUE':
-		return False,'False'
+		return False,'not enable'
 
 	tnsname = decrypt(conf.get(node,'tnsname')).lower()
 	try:
 		db = cx_Oracle.connect(tnsname)
 	except:
-		failCount = getValue(data,'failCount',0) + 1
+		failCount = int(getValue(data,'failCount','0')) + 1
 		if failCount >= 3:
 			closeNode(conf_path,node)
 		data['failCount'] = failCount
 
 		logger.error('can\'t connect to node,error is : ' + sys.exc_info() + '.\nDetail is : ' + sys.exc_info()[1])
-		return False,'False'
+		return False,'failed three times'
 	else:
-		data['failCount'] = 0
+		data['failCount'] = '0'
 
 
 	sql_dbid = 'select dbid from v$database'
@@ -119,18 +119,18 @@ def baseNode(flag,conf,node):
 	cursor = db.cursor()
 
 	cursor.execute(sql_dbid)
-	dbid_node = cursor.fetchone()
+	dbid_node = str(cursor.fetchone()[0])
 	dbid_conf = decrypt(conf.get(node,'dbid')).lower()
 	if dbid_node != dbid_conf:
 		closeNode(conf_path,node)
-		return False,'False'
+		return False,'dbid is wrong'
 
-	cursor.execute(sql_ins)
-	inum_node = cursor.fetchone()
+	cursor.execute(sql_inum)
+	inum_node = str(cursor.fetchone()[0])
 	inum_conf = decrypt(conf.get(node,'instance_num')).lower()
 	if inum_node != inum_conf:
 		closeNode(conf_path,node)
-		return False,'False'
+		return False,'instance number is wrong'
 
 	return True,db
 
