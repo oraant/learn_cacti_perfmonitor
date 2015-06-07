@@ -6,7 +6,9 @@ import logging
 import dbm
 import ConfigParser
 import cx_Oracle
+import time
 
+old = time.time()
 if w.verifyEnable('datamanager') != True:
 	print 'model can\'t run'
 	exit(1)
@@ -23,3 +25,5 @@ else:
 cursor = db.cursor()
 cursor.execute('select sysdate from v$database')
 print cursor.fetchall()
+now = time.time()
+print now - old
