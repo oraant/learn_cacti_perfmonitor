@@ -12,7 +12,7 @@ if w.verifyEnable('datamanager') != True:
 	exit(1)
 
 conf,data,logger = w.getFiles('getOracle')
-result = w.baseNode('getOracle',conf,'xuniji')
+result = w.advancedNode('getOracle',conf,'xuniji')
 
 if result[0] == True:
 	db = result[1]
@@ -21,5 +21,5 @@ else:
 	exit()
 
 cursor = db.cursor()
-cursor.execute('select dbid from v$database')
+cursor.execute('select sysdate from v$database')
 print cursor.fetchall()

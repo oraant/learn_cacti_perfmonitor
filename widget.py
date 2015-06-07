@@ -8,6 +8,7 @@ import commands
 import base64
 import sys
 import cx_Oracle
+import time
 
 #get config,dbm and logger
 def getFiles(flag):
@@ -71,13 +72,13 @@ def verifyEnable(flag):
 	if conf.getboolean('enable','global') != True:
 		return False
 	if conf.getboolean('enable',flag) != True:
-                return False
+		return False
 	if verifyMac() != True:
-                return False
+		return False
 	return True
 
 
-#verify a node link in base mode
+#verify a node link in basic mode
 def getValue(data,key,default):
 	for i in data.keys():
 		if i == key:
@@ -85,33 +86,36 @@ def getValue(data,key,default):
 	return default
 
 def closeNode(conf_path,node):
-        cf = ConfigParser.ConfigParser()
-        cf.read(conf_path)
+	cf = ConfigParser.ConfigParser()
+	cf.read(conf_path)
 	enable = encrypt('False')
 	cf.set(node,'enable',enable)
-        cf.write(open(conf_path,"w"))
+	cf.write(open(conf_path,"w"))
 
 
-def baseNode(flag,conf,node):
+def basicNode(flag,conf,node):
 	conf_path = sys.path[0] + '/conf/' + flag + '.conf'
+	key_string = flag + 'failCount'
+
 
 	enable = decrypt(conf.get(node,'enable')).upper()
 	if enable != 'TRUE':
 		return False,'not enable'
 
+
 	tnsname = decrypt(conf.get(node,'tnsname')).lower()
 	try:
 		db = cx_Oracle.connect(tnsname)
 	except:
-		failCount = int(getValue(data,'failCount','0')) + 1
+		failCount = int(getValue(data,key_string,'0')) + 1
 		if failCount >= 3:
 			closeNode(conf_path,node)
-		data['failCount'] = failCount
+		data[key_string] = str(failCount)
 
 		logger.error('can\'t connect to node,error is : ' + sys.exc_info() + '.\nDetail is : ' + sys.exc_info()[1])
 		return False,'failed three times'
 	else:
-		data['failCount'] = '0'
+		data[key_string] = '0'
 
 
 	sql_dbid = 'select dbid from v$database'
@@ -130,12 +134,34 @@ def baseNode(flag,conf,node):
 	inum_conf = decrypt(conf.get(node,'instance_num')).lower()
 	if inum_node != inum_conf:
 		closeNode(conf_path,node)
-		return False,'instance number is wrong'
+		return False,'instance number is wrong' 
 
 	return True,db
 
 
+#verify a node link in advanced mode
+def advancedNode(flag,conf,node):
+	result = basicNode('getOracle',conf,'xuniji')
+	if result[0] == True:
+		db = result[1]
+	else:
+		return False,result[1]
+
+	
+	key_string = flag + 'lasCall'
+	lastcall = float(getValue(data,key_string,'0'))
+	nowtime = time.time()
+	diff = nowtime - lastcall
+	data[key_string] = str(nowtime)
+	if diff > 700:
+		return False,'time interval out of range,gap is : ' + str(diff)
 
 
-
-
+	cursor = db.cursor()
+	sql_running = 'select (sysdate-startup_time)*24*3600 from v$instance'
+	cursor.execute(sql_running)
+	running_time = cursor.fetchone()[0]
+	if running_time < 700:
+		return False,'running time less than 10min,running time is : ' + str(running_time)
+	else:
+		return True,db
