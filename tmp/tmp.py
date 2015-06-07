@@ -2,21 +2,22 @@
 #-*- coding:utf-8 -*-
 
 import inc
-import ConfigParser
+import time
 
-cf = ConfigParser.ConfigParser()
-cf.read('config')
+a = float(str(0))
+print type(a)
+print a
+print type(90)
 
-conf = ConfigParser.ConfigParser()
-conf.read('config')
+old = time.time()
+print 'old is : ' + str(old)
 
-for i in conf.sections():
-	print i
+time.sleep(3)
 
-for i in cf.sections():
-	print i
+now = time.time()
+print 'now is : ' + str(now)
 
-conf.set('A','a','oooo')
-cf.set('A','a','cfcfcfcf')
-cf.write(open('config',"w"))
-conf.write(open('config',"w"))
+if now - old >= 2:
+	print '\n>2'
+else:
+	print '\n<2'
