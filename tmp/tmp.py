@@ -3,21 +3,22 @@
 
 import inc
 import time
+import cx_Oracle
 
-a = float(str(0))
-print type(a)
-print a
-print type(90)
+sql = 'select * from dual where 2=1'
+link = 'system/oracle@192.168.56.60:1521/db11g'
 
-old = time.time()
-print 'old is : ' + str(old)
+db = cx_Oracle.connect(link)
+cursor = db.cursor()
+cursor.execute(sql)
+r = cursor.fetchall()
 
-time.sleep(3)
+print 'r ='
+print r
+print type(r)
+print len(r)
 
-now = time.time()
-print 'now is : ' + str(now)
-
-if now - old >= 2:
-	print '\n>2'
-else:
-	print '\n<2'
+for i in r:
+	print 'i ='
+	print i
+	print type(i)
