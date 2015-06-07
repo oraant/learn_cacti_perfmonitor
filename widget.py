@@ -29,4 +29,6 @@ def getfiles(flag):
 	logger.setLevel(log_level)
 	logger.addHandler(fh)
 
-	dbm = dbm.open(path_dbm,'c')
+	data = dbm.open(path_dbm,'c')
+
+	return cf,data,logger

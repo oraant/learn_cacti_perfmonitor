@@ -2,5 +2,10 @@
 #-*- coding:utf-8 -*-
 
 import widget
+import logging
+import dbm
+import ConfigParser
 
-widget.getfiles('asdf')
+cf,dbm,logger = widget.getfiles('getOracle')
+logger.info('hahhahahsdlfkhaslkdjfhalskdjf')
+print cf.get('xuniji','tnsname')
