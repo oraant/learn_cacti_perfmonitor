@@ -48,7 +48,8 @@ def encrypt(string):
 conf,data,logger = getFiles('global')
 def getServer():
 	slink = conf.get('server','slink')
-	return cx_Oracle.connect(slink)
+	server = cx_Oracle.connect(slink)
+	return server
 
 
 #if a model can run
@@ -142,13 +143,13 @@ def basicNode(flag,conf,node):
 
 #verify a node link in advanced mode
 def advancedNode(flag,conf,node):
-	result = basicNode('getOracle',conf,'xuniji')
+	result = basicNode('getOracle',conf,node)
 	if result[0] == True:
 		db = result[1]
 	else:
 		return False,result[1]
 
-	
+
 	key_string = flag + 'lasCall'
 	lastcall = float(getValue(data,key_string,'0'))
 	nowtime = time.time()
