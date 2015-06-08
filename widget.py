@@ -46,8 +46,9 @@ def encrypt(string):
 
 #get slink from config file
 conf,data,logger = getFiles('global')
-def getSlink():
-	return conf.get('server','slink')
+def getServer():
+	slink = conf.get('server','slink')
+	return cx_Oracle.connect(slink)
 
 
 #if a model can run
