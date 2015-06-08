@@ -7,6 +7,12 @@ import dbm
 import ConfigParser
 import cx_Oracle
 import time
+import sendmail
+
+s = 'asdfsadfsadfasdlfkjasl;dfkjaskdfjhasldkfjhaslkdfjhasldkfjasldfkjsa ads ;lkf ja阿萨来啃静安寺扥灵撒旦法；阿萨来啃囧啊扥'
+sendmail.send(s)
+
+exit(0)
 
 old = time.time()
 if w.verifyEnable('datamanager') != True:
