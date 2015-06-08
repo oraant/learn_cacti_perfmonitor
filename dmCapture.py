@@ -25,22 +25,19 @@ def _getData(cursor,name):
 	datas=cursor.fetchall()
 	return datas
 
-def _putData(server,datas,table):
-	cursor=server.cursor()
+def _putData(cursor,datas,table):
 	try:
 		for i in datas:
 			insertsql="insert into " + table + " values('%s', replace(replace('%s','danyinhao',chr(39)),'yufuhao',chr(38)), %s)"%(i[0],i[1],i[2])
 			cursor.execute(insertsql)
 		cursor.execute("commit")
-		cursor.close()
 		return True
 	except:
 		cursor.execute("rollback")
 		cursor.execute("commit")
-		cursor.close()
 		print sys.exc_info()[1]
 		return False
 
-def main(remote_cursor,server,name,table = 'rawdata_10min'):
+def main(remote_cursor,server_cursor,name,table = 'rawdata_10min'):
 		datas = _getData(remote_cursor,name)
-		result = _putData(server,datas,table)
+		result = _putData(server_cursor,datas,table)
