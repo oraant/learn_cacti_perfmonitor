@@ -14,8 +14,8 @@ from email.mime.multipart import MIMEMultipart
 
 #verify if this model can run
 if w.verifyEnable('sendmail') != True:
-        print 'model can not run'
-        exit(0)
+	print 'model can not run'
+	exit(0)
 
 
 #get base configure
@@ -31,21 +31,21 @@ mail_text = '内容为空'
 msg = MIMEMultipart()
 
 def _format_addr(s):
-    name, addr = parseaddr(s)
-    return formataddr(( \
-        Header(name, 'utf-8').encode(), \
-        addr.encode('utf-8') if isinstance(addr, unicode) else addr))
+	name, addr = parseaddr(s)
+	return formataddr(( \
+		Header(name, 'utf-8').encode(), \
+		addr.encode('utf-8') if isinstance(addr, unicode) else addr))
 
 def getatt(attachment):
 	att = MIMEText(open(attachment, 'rb').read(), 'base64','gb2312')
 	att["Content-Type"] = 'application/octet-stream'
-	att["Content-Disposition"] = "attachment; filename=\""+arg+"\""
+	att["Content-Disposition"] = "attachment; filename=\"" + attachment + "\""
 	return att
 
 def report(text,attachments):
-        for attachment in attachments:
+	for attachment in attachments:
 		att = getatt(attachment)
-                msg.attach(att)
+		msg.attach(att)
 	send(text)
 
 def send(text):
