@@ -50,7 +50,7 @@ def report(text,attachments):
 
 def send(text):
 	mail_text = MIMEText(text,_charset='utf-8')
-	msg.attach(text)
+	msg.attach(mail_text)
 	sendToTargets()
 
 def sendToTargets():
@@ -64,5 +64,4 @@ def sendToTargets():
 	for target in targets:
 		msg['To'] = _format_addr(u'产品用户 <%s>' % target)
 		server.sendmail(mail_from, target, msg.as_string())
-
 	server.quit()
