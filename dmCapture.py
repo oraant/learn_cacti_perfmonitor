@@ -4,7 +4,7 @@
 import cx_Oracle
 import sys
 
-def getData(cursor,name):
+def _getData(cursor,name):
 	swapsql="""
 	select :target, replace(name, chr(39), 'danyinhao'), value
 	  from v$sysstat where name != 'DB time'
@@ -25,7 +25,7 @@ def getData(cursor,name):
 	datas=cursor.fetchall()
 	return datas
 
-def putData(server,datas,table):
+def _putData(server,datas,table):
 	cursor=server.cursor()
 	try:
 		for i in datas:
@@ -42,5 +42,5 @@ def putData(server,datas,table):
 		return False
 
 def main(remote_cursor,server,name,table = 'rawdata_10min'):
-		datas = getData(remote_cursor,name)
-		result = putData(server,datas,table)
+		datas = _getData(remote_cursor,name)
+		result = _putData(server,datas,table)
