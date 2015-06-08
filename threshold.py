@@ -12,7 +12,7 @@ if w.verifyEnable('threshold') != True:
 	print 'model can not run'
         exit(0)
 
-conf,data,logger = w.getFiles('getThreshold')
+conf,local_data,logger = w.getFiles('getThreshold')
 
 
 sql_latest = 'select to_char(time_suggested,\'YYYY-MM-DD HH24:MI:SS.FF TZH:TZM\') from dba_outstanding_alerts'
@@ -54,8 +54,8 @@ for node in conf.sections():
 		this_latest = sql_result[0][0]
 
 	key_string = node + 'last_latest'
-	last_latest = w.getValue(data,key_string,'1000-01-01 01:01:01.000009 +08:00')
-	data[key_string] = this_latest
+	last_latest = w.getValue(local_data,key_string,'1000-01-01 01:01:01.000009 +08:00')
+	local_data[key_string] = this_latest
 	
 	cursor.execute(sql_report,this_latest = this_latest,last_latest = last_latest)
 	datas = cursor.fetchall()
