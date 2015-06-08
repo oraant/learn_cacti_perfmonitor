@@ -83,6 +83,19 @@ CREATE TABLE calvalue_10min
   TABLESPACE MONITOR;
 
 
+drop table alert_10min;
+CREATE TABLE alert_10min
+  (
+    target_name VARCHAR2(100) NOT NULL,
+    param_name  VARCHAR2(100) NOT NULL,
+    manul_value NUMBER,
+    last_month  NUMBER,
+    last_week   NUMBER,
+    flag        VARCHAR2(100)
+  )
+  TABLESPACE MONITOR;
+
+
 drop table calvalue_arch;
 CREATE TABLE calvalue_arch
   (
