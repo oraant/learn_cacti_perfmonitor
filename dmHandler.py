@@ -15,7 +15,7 @@ def delNode(cursor,node):
 
 def delAll(cursor):
 	sql_delete_all = 'delete from rawdata_10min_last'
-	cursor.execute(sql_delete_all,target_name = node)
+	cursor.execute(sql_delete_all)
 	cursor.execute('commit')
 
 def _toLast(cursor):
