@@ -53,7 +53,7 @@ def getAlert(cursor):
 	  from (select a.target_name,
 	               a.param_name,
 	               c.param_value,
-	               case a.flag
+	               case nvl(a.flag, 'last_time')
 	                 when 'manul_value' then
 	                  a.manul_value
 	                 when 'last_month' then
@@ -64,6 +64,8 @@ def getAlert(cursor):
 	                  GREATEST(a.last_month, a.last_week)
 	                 when 'max_value' then
 	                  GREATEST(a.manul_value, a.last_month, a.last_week)
+	                 when 'min_value' then
+	                  LEAST(a.manul_value, a.last_month, a.last_week)
 	               end alert_value
 	          from alert_10min a
 	          join calvalue_10min c
