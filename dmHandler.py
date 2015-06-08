@@ -31,7 +31,7 @@ def _archive(cursor):
 	cursor.execute(sql_archive_calvalue, time = _systime())
 	cursor.execute('commit')
 
-def clear(cursor):
+def _clear(cursor):
 	sql_clear_rawdata = "delete from rawdata_10min"
 	sql_clear_calvalue = "delete from calvalue_10min"
 	cursor.execute(sql_clear_rawdata)
@@ -39,9 +39,9 @@ def clear(cursor):
 	cursor.execute('commit')
 
 def finish(cursor):
-	toLast(cursor)
-	archive(cursor)
-	clear(cursor)
+	_toLast(cursor)
+	_archive(cursor)
+	_clear(cursor)
 
 def calculate(cursor,target,param_table):
 	current_rawdata_10min_to_calvalue = '''
