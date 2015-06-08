@@ -42,6 +42,19 @@ def getDynamic(cursor):
 	         group by target_name, param_name)
 	'''
 
+	sql_get_last_hour = '''
+	update alert_10min
+	   set last_week =
+	       (select max(param_value)
+	          from calvalue_arch
+	         where update_time >=
+	               sysdate - to_dsinterval('PT60M')
+	           and update_time <= sysdate
+	           and alert_10min.target_name = calvalue_arch.target_name
+	           and alert_10min.param_name = calvalue_arch.param_name
+	         group by target_name, param_name)
+	'''
+
 	cursor.execute(sql_get_last_month)
 	cursor.execute(sql_get_last_week)
 	cursor.execute('commit')
