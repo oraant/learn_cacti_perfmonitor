@@ -39,10 +39,10 @@ def _clear(cursor):
 	cursor.execute('commit')
 
 def begin(cursor):
+	_toLast(cursor)
 	_clear(cursor)
 
 def end(cursor):
-	_toLast(cursor)
 	_archive(cursor)
 	
 def calculate(cursor,target,param_table):
