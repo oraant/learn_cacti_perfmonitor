@@ -89,18 +89,23 @@ def getAlert(cursor):
 	                 when 'last_week' then
 	                  a.last_week
 	                 when 'last_time' then
-	                  GREATEST(a.last_month, a.last_week)
-	                 when 'max_value' then
-	                  GREATEST(a.manul_value, a.last_month, a.last_week)
-	                 when 'min_value' then
-	                  LEAST(a.manul_value, a.last_month, a.last_week)
-	               end alert_value
+	                  case
+	                    when a.last_month is null and a.last_week is null then
+	                     null
+	                    when a.last_month is null then
+	                     a.last_week
+	                    when a.last_week is null then
+	                     a.last_month
+	                    else
+	                     greatest(a.last_month, a.last_week)
+	                  end
+	               end as alert_value
 	          from alert_10min a
 	          join calvalue_10min c
 	            on a.target_name = c.target_name
 	           and a.param_name = c.param_name)
 	 where param_value > alert_value
-         order by target_name
+	 order by target_name
 	'''
 	cursor.execute(sql_get_alert)
 	datas = cursor.fetchall()
