@@ -97,7 +97,7 @@ def closeNode(conf_path,node):
 
 def basicNode(flag,conf,node):
 	conf_path = sys.path[0] + '/conf/' + flag + '.conf'
-	key_string = flag + 'failCount'
+	key_string = flag + node + 'failCount'
 
 
 	enable = decrypt(conf.get(node,'enable')).upper()
@@ -150,7 +150,7 @@ def advancedNode(flag,conf,node):
 		return False,result[1]
 
 
-	key_string = flag + 'lasCall'
+	key_string = flag + node + 'lasCall'
 	lastcall = float(getValue(data,key_string,'0'))
 	nowtime = time.time()
 	diff = nowtime - lastcall
