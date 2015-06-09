@@ -10,7 +10,7 @@ import time
 
 if w.verifyEnable('threshold') != True:
 	print 'model can not run'
-        exit(0)
+	exit(0)
 
 conf,local_data,logger = w.getFiles('getThreshold')
 
@@ -43,23 +43,29 @@ for node in conf.sections():
 		cursor = db.cursor()
 	else:
 	        print result[1]
-	        exit(1)
+		continue
 	
 	
+	print ' ====== node is ' + node + ' ====== '
+
 	cursor.execute(sql_latest)
 	sql_result = cursor.fetchall()
 	if len(sql_result) == 0:
+		print 'can not get latest time in dba_outstanding_alerts,nothing inside.'
 		continue
 	else:
 		this_latest = sql_result[0][0]
+		print 'latest update time is : ' + this_latest
 
 	key_string = node + 'last_latest'
 	last_latest = w.getValue(local_data,key_string,'1000-01-01 01:01:01.000009 +08:00')
+	print 'last update time is : ' + last_latest
 	local_data[key_string] = this_latest
 	
 	cursor.execute(sql_report,this_latest = this_latest,last_latest = last_latest)
 	datas = cursor.fetchall()
 	if len(datas) == 0:
+		print 'did not get data from dba_outstanding_alerts table'
 		continue
 
 	tnsname = w.decrypt(conf.get(node,'tnsname'))
