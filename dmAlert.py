@@ -1,11 +1,11 @@
 #!/usr/bin/python
 #-*- coding:utf-8 -*-
 
-def addNode(cursor,target):
+def addNode(cursor,target,param_table):
 	sql_add_node = """
 	insert into alert_10min (target_name,param_name) 
 	select target_name,param_name
-	  from parameter_oracle11g
+	  from """ + param_table + """
 	 cross join (select '""" + target + """' target_name from dual)
 	"""
 
