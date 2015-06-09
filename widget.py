@@ -88,6 +88,7 @@ def getValue(data,key,default):
 	return default
 
 def closeNode(conf_path,node):
+	print 'closing node'
 	cf = ConfigParser.ConfigParser()
 	cf.read(conf_path)
 	enable = encrypt('False')
@@ -112,10 +113,11 @@ def basicNode(flag,conf,node):
 		failCount = int(getValue(data,key_string,'0')) + 1
 		if failCount >= 3:
 			closeNode(conf_path,node)
+			return False,'connection failed three times,closing node'
 		data[key_string] = str(failCount)
 
-		logger.error('can\'t connect to node,error is : ' + sys.exc_info() + '.\nDetail is : ' + sys.exc_info()[1])
-		return False,'failed three times'
+		logger.error('can\'t connect to node,error is : ' + str(sys.exc_info()) + '.\nDetail is : ' + str(sys.exc_info()[1]))
+		return False,'connection failed'
 	else:
 		data[key_string] = '0'
 
