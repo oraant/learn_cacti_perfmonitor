@@ -41,6 +41,7 @@ for node in conf.sections():
 	else:
 		dmHandler.delNode(cursor,node)
 		print result[1]
+		print 'delete datas from rawdata_last table.'
 		continue
 
 
@@ -89,7 +90,7 @@ for node in conf.sections():
 	rows = cursor.fetchone()[0]
 	if rows == 0:
 		print 'need to add node to alert table'
-		dmAlert.addNode(cursor,node)
+		dmAlert.addNode(cursor,node,param_table)
 
 
 print ' ====== end of loop ======'
@@ -118,10 +119,11 @@ datas = dmAlert.getAlert(cursor)
 #format alert report
 if len(datas) != 0:
 	mail_text = '中研软Perfmonitor性能预警平台发来报告：\n'
-	sms_text = '短信模块'
+	sms_text = 'Perfmonitor阈值告警功能：\\n'
 	for data in datas:
 		mail_text += '节点：%-20s参数：%-50s当前的值：%-15.2f告警值：%-15.2f\n'%(data[0],data[1],data[2],data[3])
 	
+	sms_text += '本次检测，发现共' + str(len(datas)) + '个参数超过警戒值。\\n详细内容已发送至您的邮箱。'
 	print mail_text
 	print sms_text
 else:
