@@ -38,11 +38,13 @@ def _clear(cursor):
 	cursor.execute(sql_clear_calvalue)
 	cursor.execute('commit')
 
-def finish(cursor):
-	_toLast(cursor)
-	_archive(cursor)
+def begin(cursor):
 	_clear(cursor)
 
+def end(cursor):
+	_toLast(cursor)
+	_archive(cursor)
+	
 def calculate(cursor,target,param_table):
 	current_rawdata_10min_to_calvalue = '''
         insert /*+append*/ into calvalue_10min
