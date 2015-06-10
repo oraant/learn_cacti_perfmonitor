@@ -4,6 +4,7 @@
 import cx_Oracle
 import sys
 
+#get parameter's value from remote node
 def _getData(cursor,name):
 	swapsql="""
 	select :target, replace(name, chr(39), 'danyinhao'), value
@@ -25,6 +26,7 @@ def _getData(cursor,name):
 	datas=cursor.fetchall()
 	return datas
 
+#save datas to server
 def _putData(cursor,datas,table):
 	try:
 		for i in datas:
@@ -38,6 +40,7 @@ def _putData(cursor,datas,table):
 		print sys.exc_info()[1]
 		return False
 
+#main function,handle all
 def main(remote_cursor,server_cursor,name,table = 'rawdata_10min'):
 		datas = _getData(remote_cursor,name)
 		result = _putData(server_cursor,datas,table)

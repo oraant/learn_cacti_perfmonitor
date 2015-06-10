@@ -1,6 +1,7 @@
 #!/usr/bin/python
 #-*- coding:utf-8 -*-
 
+#add one node's parameters into alert table
 def addNode(cursor,target,param_table):
 	sql_add_node = """
 	insert into alert_10min (target_name,param_name) 
@@ -13,6 +14,7 @@ def addNode(cursor,target,param_table):
 	cursor.execute('commit')
 
 
+#get history value at the same hour but last week or last month
 def getDynamic(cursor):
 	sql_get_last_month = '''
 	update alert_10min
@@ -75,6 +77,7 @@ def getDynamic(cursor):
 	cursor.execute('commit')
 
 
+#get current value and compare with alert value
 def getAlert(cursor):
 	sql_get_alert = '''
 	select *
