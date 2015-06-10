@@ -110,14 +110,14 @@ if capture_counter == 0:
 	logger.debug("capture counter = 0, close connection and cursor with server, exit program.")
 	cursor.close()
 	server.close()
-	exit()
+	exit(0)
 
 if calculate_counter == 0:
 	logger.debug("calculate counter = 0, archive datas with end function. Close connection and cursor with server, exit program.")
 	dmHandler.end(cursor)
 	cursor.close()
 	server.close()
-	exit()
+	exit(0)
 
 
 #get alert report
@@ -146,4 +146,4 @@ logger.debug("Archive datas with end function. Close connection and cursor with 
 dmHandler.end(cursor)
 cursor.close()
 server.close()
-exit()
+exit(0)
