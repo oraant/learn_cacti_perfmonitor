@@ -15,6 +15,7 @@ def getDbm(flag):
 	path_dbm  = sys.path[0] + '/dbm/' + flag
 	data = dbm.open(path_dbm,'c')
 	return data
+
 def getFiles(flag):
 	path_conf_global = sys.path[0] + '/conf/global.conf'
 	path_conf = sys.path[0] + '/conf/' + flag + '.conf'
@@ -152,7 +153,7 @@ def basicNode(flag,conf,node):
 
 #verify a node link in advanced mode
 def advancedNode(flag,conf,node):
-	result = basicNode('getOracle',conf,node)
+	result = basicNode(flag,conf,node)
 	if result[0] == True:
 		db = result[1]
 	else:
