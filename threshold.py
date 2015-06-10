@@ -95,7 +95,9 @@ for node in conf.sections():
 
 #loop end,verify if captured data
 logger.debug(' ------ Loop end.')
+
 if sms_db_count == 0:
+	local_data.close()
 	exit(0)
 
 

@@ -24,6 +24,7 @@ try:
 	cursor = server.cursor()
 except:
 	logger.critical("Can't connect with server")
+	local_data.close()
 	exit(1)
 
 
@@ -110,6 +111,7 @@ if capture_counter == 0:
 	logger.debug("capture counter = 0, close connection and cursor with server, exit program.")
 	cursor.close()
 	server.close()
+	local_data.close()
 	exit(0)
 
 if calculate_counter == 0:
@@ -117,6 +119,7 @@ if calculate_counter == 0:
 	dmHandler.end(cursor)
 	cursor.close()
 	server.close()
+	local_data.close()
 	exit(0)
 
 
@@ -146,4 +149,5 @@ logger.debug("Archive datas with end function. Close connection and cursor with 
 dmHandler.end(cursor)
 cursor.close()
 server.close()
+local_data.close()
 exit(0)

@@ -11,6 +11,10 @@ import cx_Oracle
 import time
 
 #get config,dbm and logger
+def getDbm(flag):
+	path_dbm  = sys.path[0] + '/dbm/' + flag
+	data = dbm.open(path_dbm,'c')
+	return data
 def getFiles(flag):
 	path_conf_global = sys.path[0] + '/conf/global.conf'
 	path_conf = sys.path[0] + '/conf/' + flag + '.conf'
@@ -33,7 +37,6 @@ def getFiles(flag):
 	logger.addHandler(fh)
 
 	data = dbm.open(path_dbm,'c')
-
 	return cf,data,logger
 
 
@@ -45,7 +48,9 @@ def encrypt(string):
 
 
 #get slink from config file
-conf,data,logger = getFiles('global')
+conf,tmp_data,logger = getFiles('global')
+tmp_data.close()
+
 def getServer():
 	slink = conf.get('server','slink')
 	server = cx_Oracle.connect(slink)
@@ -97,6 +102,7 @@ def closeNode(conf_path,node):
 
 
 def basicNode(flag,conf,node):
+	data = getDbm('global')
 	conf_path = sys.path[0] + '/conf/' + flag + '.conf'
 	key_string = flag + node + 'failCount'
 
@@ -140,6 +146,7 @@ def basicNode(flag,conf,node):
 		closeNode(conf_path,node)
 		return False,'instance number is wrong' 
 
+	data.close()
 	return True,db
 
 
@@ -151,6 +158,7 @@ def advancedNode(flag,conf,node):
 	else:
 		return False,result[1]
 
+	data = getDbm('global')
 
 	key_string = flag + node + 'lasCall'
 	lastcall = float(getValue(data,key_string,'0'))
@@ -169,3 +177,4 @@ def advancedNode(flag,conf,node):
 		return False,'running time less than 10min,running time is : ' + str(running_time)
 	else:
 		return True,db
+	data.close()
