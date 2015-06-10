@@ -16,6 +16,29 @@ def getDbm(flag):
 	data = dbm.open(path_dbm,'c')
 	return data
 
+def getConf(flag):
+	path_conf = sys.path[0] + '/conf/' + flag + '.conf'
+	cf = ConfigParser.ConfigParser()
+	cf.read(path_conf)
+	return cf
+
+def getLogger(flag):
+	path_conf_global = sys.path[0] + '/conf/global.conf'
+	cf_global = ConfigParser.ConfigParser()
+	cf_global.read(path_conf_global)
+	log_level = cf_global.getint('server','log_level')
+
+	formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(name)s -- %(message)s')
+	fh = logging.FileHandler(path_log)
+	fh.setFormatter(formatter)
+
+	logger = logging.getLogger(flag)
+	logger.setLevel(log_level)
+	logger.addHandler(fh)
+
+	return logger
+	
+
 def getFiles(flag):
 	path_conf_global = sys.path[0] + '/conf/global.conf'
 	path_conf = sys.path[0] + '/conf/' + flag + '.conf'
