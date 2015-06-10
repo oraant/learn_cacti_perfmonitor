@@ -60,7 +60,7 @@ CREATE OR REPLACE
         --If it's the first loop,then open and write basic informations into the output file.
         IF v_temp1 = 1 AND v_temp2 = 1 THEN
           v_file_cur := utl_file.fopen(i_file_dir, i_file_name, 'w');
-          Utl_file.putf(v_file_cur, v_timestamp || '  600  ' || '\n');
+          Utl_file.putf(v_file_cur, v_timestamp || '  600  ' || '\n\n\n\n');
         END IF;
         
         --Write parameter value into the output file,If at the end of class,then ENTER.
