@@ -12,67 +12,76 @@ import dmHandler
 import dmAlert
 import dmCapture
 
+#get basic info : enable or not, configure file, dbm file, logger, and connection with server.
 if w.verifyEnable('datamanager') != True:
-	print 'model can\'t run'
 	exit(1)
 
 conf,local_data,logger = w.getFiles('getOracle')
+logger.debug(" ====== Model start. ====== ")
 
 try:
 	server = w.getServer()
 	cursor = server.cursor()
 except:
-	print "can't connect with server"
+	logger.critical("Can't connect with server")
 	exit(1)
 
 
+#manage datas in tables at the begin.
 dmHandler.begin(cursor)
-print 'begin'
+logger.debug("Program Startup with dmHandler.begin()")
 
+
+#loop for all nodes
 capture_counter = 0
 calculate_counter = 0
 for node in conf.sections():
+
 	#connect with node
+	logger.debug(" ------ Enter into loop,node is " + node + " ------ ")
 	result = w.advancedNode('getOracle',conf,node)
-	print ' ====== node is ' + node + ' ====== '
 	if result[0] == True:
 		node_db = result[1]
 		node_cursor = node_db.cursor()
+		logger.debug("Got connection and cursor from " + node)
 	else:
 		dmHandler.delNode(cursor,node)
-		print result[1]
-		print 'delete datas from rawdata_last table.'
+		logger.warning("Connect failed with " + node + ", deleted datas from rawdata_last table.\nReason is : " + result[1])
 		continue
 
 
-	#get raw data
+	#capture raw data
 	dmCapture.main(node_cursor,cursor,node)
 	capture_counter += 1
 	node_cursor.close()
 	node_db.close()
-	print 'capture done'
 
+	#dbg for rows of capture
+	sql_verify = "select count(1) from rawdata_10min where target_name = '" + node + "'"
+	cursor.execute(sql_verify)
+	rows = cursor.fetchone()[0]
+	logger.debug("Captured " + str(rows) + " rows from " + node + ", close connetion and cursor.")
 
 	#calculate
 	sql_verify = "select count(1) from rawdata_10min_last where target_name = '" + node + "'"
 	cursor.execute(sql_verify)
 	rows = cursor.fetchone()[0]
 	if rows == 0:
-		print 'no data found in rawdata_10min_last with this node.'
+		logger.warning('no data found in rawdata_10min_last with ' + node + ', end this node.' )
 		continue
 	else:
 		param_table = w.decrypt(conf.get(node,'param_table'))
 		dmHandler.calculate(cursor,node,param_table)
 		calculate_counter += 1
 
-		#dbg
+		#dbg for rows of calculate
 		sql_verify = "select count(1) from calvalue_10min where target_name = '" + node + "'"
 		cursor.execute(sql_verify)
 		rows = cursor.fetchone()[0]
-		print 'calculate done,rows in calvalue table with this node is ' + str(rows)
+		logger.debug('calculate done,rows in calvalue table with this node is ' + str(rows))
 
 
-	#to file
+	#output datas in calvalue table to output file of this node
 	pathname = w.decrypt(conf.get(node,'pathname')).upper()
 	filename = w.decrypt(conf.get(node,'filename'))
 	param_table = w.decrypt(conf.get(node,'param_table'))
@@ -80,8 +89,9 @@ for node in conf.sections():
 	tofile_sql = "select to_file('" + name + "','" + param_table + "','" + pathname + "','" + filename + "') from dual"
 	cursor.execute(tofile_sql)
 	if cursor.fetchone()[0].upper() != 'TRUE':
-		print 'failed when write calculate values to files with ' + node
+		logger.error('failed when write calculate values to files with ' + node + ', end this node.' )
 		continue
+	logger.debug("output datas to " + pathname + "/" + filename + " successed.")
 
 
 	#maintain alert table
@@ -89,31 +99,31 @@ for node in conf.sections():
 	cursor.execute(sql_verify)
 	rows = cursor.fetchone()[0]
 	if rows == 0:
-		print 'need to add node to alert table'
+		logger.debug("didn't found data in alert table, now add " + node + " in it.")
 		dmAlert.addNode(cursor,node,param_table)
 
 
-print ' ====== end of loop ======'
 
-#verify if captured or calculated
+#loop end,verify if captured or calculated
+logger.debug(' ------ Loop end.')
 if capture_counter == 0:
-	print 'capture counter = 0,exit.'
+	logger.debug("capture counter = 0, close connection and cursor with server, exit program.")
 	cursor.close()
 	server.close()
 	exit()
 
 if calculate_counter == 0:
-	print 'calculate counter = 0,end and exit.'
+	logger.debug("calculate counter = 0, archive datas with end function. Close connection and cursor with server, exit program.")
 	dmHandler.end(cursor)
 	cursor.close()
 	server.close()
 	exit()
-	
+
 
 #get alert report
 dmAlert.getDynamic(cursor)
-print 'dbg - got Dynamic'
 datas = dmAlert.getAlert(cursor)
+logger.debug("Generate dynamic alert value, and get parameter values that bigger than alert value.")
 
 
 #format alert report
@@ -126,10 +136,13 @@ if len(datas) != 0:
 	sms_text += '本次检测，发现共' + str(len(datas)) + '个参数超过警戒值。\\n详细内容已发送至您的邮箱。'
 	print mail_text
 	print sms_text
+	logger.debug("Got alert,send mail and sms.")
 else:
-	print 'no Alert.'
+	logger.debug("No Alert this time.")
 
 
+#Program termination
+logger.debug("Archive datas with end function. Close connection and cursor with server, exit program.")
 dmHandler.end(cursor)
 cursor.close()
 server.close()
