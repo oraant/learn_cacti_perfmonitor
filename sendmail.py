@@ -14,7 +14,6 @@ from email.mime.multipart import MIMEMultipart
 
 #verify if this model can run
 if w.verifyEnable('sendmail') != True:
-	print 'model can not run'
 	exit(0)
 
 
@@ -30,29 +29,34 @@ mail_text = '内容为空'
 #get messages
 msg = MIMEMultipart()
 
+#format strings to send
 def _format_addr(s):
 	name, addr = parseaddr(s)
 	return formataddr(( \
 		Header(name, 'utf-8').encode(), \
 		addr.encode('utf-8') if isinstance(addr, unicode) else addr))
 
+#get attachments
 def getatt(attachment):
 	att = MIMEText(open(attachment, 'rb').read(), 'base64','gb2312')
 	att["Content-Type"] = 'application/octet-stream'
 	att["Content-Disposition"] = "attachment; filename=\"" + attachment + "\""
 	return att
 
+#send mail with attachments
 def report(text,attachments):
 	for attachment in attachments:
 		att = getatt(attachment)
 		msg.attach(att)
 	send(text)
 
+#send mail just with messages
 def send(text):
 	mail_text = MIMEText(text,_charset='utf-8')
 	msg.attach(mail_text)
 	sendToTargets()
 
+#connect to server and send mail to targets
 def sendToTargets():
 	server = smtplib.SMTP(mail_server, 25)
 	server.set_debuglevel(0)
