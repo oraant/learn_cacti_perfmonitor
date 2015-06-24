@@ -30,14 +30,14 @@ def verifyUsable():
 
 
 #send messages to targets
-def send(str):
+def send(string):
 
 	if verifyUsable() != True:
 		exit(1)
 
 	for target in targets:
 		logger.debug('Try to send sms to ' + target)
-		command = "echo '" + str + "'|/usr/local/bin/gnokii --sendsms " + target
+		command = "echo '" + string + "'|/usr/local/bin/gnokii --sendsms " + target
 		(status,output) = commands.getstatusoutput(command)
 
 		if status == 0:
