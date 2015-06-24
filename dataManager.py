@@ -136,16 +136,16 @@ if len(datas) != 0:
 	logger.debug("Got alert,sending mail, sms and reports.")
 
 	mail_text = '中研软Perfmonitor性能预警平台发来报告：\n'
-	sms_text = 'Perfmonitor阈值告警功能：\\n'
+	smstext = 'Perfmonitor阈值告警功能：\\n'
 	for data in datas:
 		mail_text += '节点：%-20s参数：%-50s当前的值：%-15.2f告警值：%-15.2f\n'%(data[0],data[1],data[2],data[3])
 	
-	sms_text += '本次检测，发现共' + str(len(datas)) + '个参数超过警戒值。\\n详细内容已发送至您的邮箱。'
+	smstext += '本次检测，发现共' + str(len(datas)) + '个参数超过警戒值。\\n详细内容已发送至您的邮箱。'
 
-	sendmail.send(mailtext)
+	sendmail.send(mail_text)
 	sendsms.send(smstext)
 	#print mail_text
-	#print sms_text
+	#print smstext
 
 
 	targets = [data[0] for data in datas]
