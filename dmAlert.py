@@ -19,7 +19,7 @@ def getDynamic(cursor):
 	sql_get_last_month = '''
 	update alert_10min
 	   set last_month =
-	       (select max(param_value)
+	       (select max(param_value)*1.5
 	          from calvalue_arch
 	         where update_time >=
 	               sysdate - to_yminterval('P1M') - to_dsinterval('PT30M')
@@ -33,7 +33,7 @@ def getDynamic(cursor):
 	sql_get_last_week = '''
 	update alert_10min
 	   set last_week =
-	       (select max(param_value)
+	       (select max(param_value)*1.5
 	          from calvalue_arch
 	         where update_time >=
 	               sysdate - to_dsinterval('P7D') - to_dsinterval('PT30M')
@@ -45,7 +45,7 @@ def getDynamic(cursor):
 	'''
 
 	sql_get_last_hour = '''
-	update alert_10min
+	update alert_10min*1.5
 	   set last_week =
 	       (select max(param_value)
 	          from calvalue_arch
@@ -58,7 +58,7 @@ def getDynamic(cursor):
 	'''
 
 	sql_get_last_hour2 = '''
-	update alert_10min
+	update alert_10min*1.5
 	   set last_month =
 	       (select min(param_value)
 	          from calvalue_arch
