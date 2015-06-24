@@ -101,8 +101,8 @@ logger.debug(' ------ Loop end.')
 #Send mail and sms
 logger.debug("Program end,send mail and sms.\n")
 if send == True:
-        mailtext += '\n\n有任何疑问请联系北京中研软科技有限公司。公司网址：www.chinaitsoft.com'
-        smstext += mailtext
+        mailtext += '\n\n有任何疑问请联系北京中研软科技有限公司。\n公司网址：www.chinaitsoft.com'
+        smstext = mailtext
 
 sendmail.send(mailtext)
 sendsms.send(smstext)
