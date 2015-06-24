@@ -6,3 +6,9 @@ begin
   DBMS_WORKLOAD_REPOSITORY.CREATE_BASELINE(start_snap_id => 1822,end_snap_id => 1831,baseline_name => 'perfbl');
 end;
 /
+
+
+begin
+ dbms_workload_repository.drop_baseline(baseline_name => 'perfbl',cascade => true);
+end;
+/
