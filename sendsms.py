@@ -18,7 +18,7 @@ targets = conf.get('sendto','tels').split()
 
 #verify if GSM MODEM is usable
 def verifyUsable():
-	command = "/usr/bin/env gnokii --identify"
+	command = "/usr/local/bin/gnokii --identify"
 	(status,output) = commands.getstatusoutput(command)
 
 	if status == 0:
@@ -37,7 +37,7 @@ def send(str):
 
 	for target in targets:
 		logger.debug('Try to send sms to ' + target)
-		command = "echo '" + str + "'|/usr/bin/env gnokii --sendsms " + target
+		command = "echo '" + str + "'|/usr/local/bin/gnokii --sendsms " + target
 		(status,output) = commands.getstatusoutput(command)
 
 		if status == 0:
