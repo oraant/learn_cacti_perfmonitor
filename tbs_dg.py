@@ -25,6 +25,7 @@ mailtext = '来自Perfmonitor表空间及DG告警功能的报告：\n\n\n'
 smstext = 'Perfmonitor表空间及DG告警功能：\\n'
 send = False
 global_alert_value = 70
+logger.debug("global_alert_value = " + str(global_alert_value))
 
 #Ergodic every node in configure file
 for node in conf.sections():
@@ -37,7 +38,7 @@ for node in conf.sections():
                 cursor = db.cursor()
                 logger.debug("Got connection and cursor from " + node)
         else:
-                logger.warning("Connect failed with " + node + ". \nReason is : " + result[1])
+                logger.warning("Connect failed with " + node + ". \n\tReason is : " + result[1])
                 continue
 
         #Get information about remote disk group

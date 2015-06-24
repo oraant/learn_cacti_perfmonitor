@@ -102,7 +102,7 @@ if sms_db_count == 0:
 
 
 #send mail and sms
-logger.debug("Program end,send mail and sms.")
+logger.debug("Program end,send mail and sms.\n")
 mailtext += '\n\n有任何疑问请联系北京中研软科技有限公司。公司网址：www.chinaitsoft.com'
 smstext += '经检测，发现共' + str(sms_db_count) + '个库发生告警，告警条数共' + str(sms_rept_count) + '条。\\n详细内容已发送至您的邮箱。'
 #sendmail.send(mailtext)

@@ -145,7 +145,7 @@ else:
 
 
 #Program termination
-logger.debug("Archive datas with end function. Close connection and cursor with server, exit program.")
+logger.debug("Archive datas with end function. Close connection and cursor with server, exit program.\n")
 dmHandler.end(cursor)
 cursor.close()
 server.close()
