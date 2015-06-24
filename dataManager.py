@@ -11,6 +11,7 @@ import sendmail
 import dmHandler
 import dmAlert
 import dmCapture
+import commands
 
 #get basic info : enable or not, configure file, dbm file, logger, and connection with server.
 if w.verifyEnable('datamanager') != True:
@@ -108,14 +109,14 @@ for node in conf.sections():
 #loop end,verify if captured or calculated
 logger.debug(' ------ Loop end.')
 if capture_counter == 0:
-	logger.debug("capture counter = 0, close connection and cursor with server, exit program.")
+	logger.debug("capture counter = 0, close connection and cursor with server, exit program.\n")
 	cursor.close()
 	server.close()
 	local_data.close()
 	exit(0)
 
 if calculate_counter == 0:
-	logger.debug("calculate counter = 0, archive datas with end function. Close connection and cursor with server, exit program.")
+	logger.debug("calculate counter = 0, archive datas with end function. Close connection and cursor with server, exit program.\n")
 	dmHandler.end(cursor)
 	cursor.close()
 	server.close()
@@ -131,6 +132,8 @@ logger.debug("Generate dynamic alert value, and get parameter values that bigger
 
 #format alert report
 if len(datas) != 0:
+	logger.debug("Got alert,sending mail, sms and reports.")
+
 	mail_text = '中研软Perfmonitor性能预警平台发来报告：\n'
 	sms_text = 'Perfmonitor阈值告警功能：\\n'
 	for data in datas:
@@ -139,7 +142,25 @@ if len(datas) != 0:
 	sms_text += '本次检测，发现共' + str(len(datas)) + '个参数超过警戒值。\\n详细内容已发送至您的邮箱。'
 	print mail_text
 	print sms_text
-	logger.debug("Got alert,send mail and sms.")
+
+	targets = [data[0] for data in datas]
+	targets = list(set(targets))
+	logger.debug('hosts need to generate reports is : ' + str(targets))
+	for target in targets:
+		tnsname = w.decrypt(conf.get(target,'tnsname'))
+		param_table = w.decrypt(conf.get(target,'param_table'))
+		version = param_table[-3:-1]
+		inst_num = w.decrypt(conf.get(target,'instance_num'))
+		base_line = 'perfbl'
+
+		command = '/perfmonitor/reports/main.sh ' + tnsname + ' ' + version + ' ' + inst_num + ' ' + base_line
+		(status,output) = commands.getstatusoutput(command)
+		if status != 0:
+			logger.error('can\'t send reports to ' + target + ', output is : ' + output)
+		else:
+			logger.debug('send reports to ' + target )
+
+	logger.debug("Sending done.")
 else:
 	logger.debug("No Alert this time.")
 
