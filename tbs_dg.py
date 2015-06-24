@@ -7,10 +7,12 @@ import dbm
 import ConfigParser
 import cx_Oracle
 import time
+import sendmail
+import sendsms
 
 #Get basic info : enable or not, configure file, dbm file, logger, and sql statements.
 if w.verifyEnable('tbs_dg') != True:
-        exit(1)
+	exit(1)
 
 conf,local_data,logger = w.getFiles('getTbs_dg')
 local_data.close()
@@ -102,9 +104,9 @@ if send == True:
         mailtext += '\n\n有任何疑问请联系北京中研软科技有限公司。公司网址：www.chinaitsoft.com'
         smstext += mailtext
 
-#sendmail.send(mailtext)
-#sendsms.send(smstext)
+sendmail.send(mailtext)
+sendsms.send(smstext)
 
-print mailtext
-print '---'
+#print mailtext
+#print '---'
 #print smstext

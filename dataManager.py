@@ -8,6 +8,7 @@ import ConfigParser
 import cx_Oracle
 import time
 import sendmail
+import sendsms
 import dmHandler
 import dmAlert
 import dmCapture
@@ -140,8 +141,12 @@ if len(datas) != 0:
 		mail_text += '节点：%-20s参数：%-50s当前的值：%-15.2f告警值：%-15.2f\n'%(data[0],data[1],data[2],data[3])
 	
 	sms_text += '本次检测，发现共' + str(len(datas)) + '个参数超过警戒值。\\n详细内容已发送至您的邮箱。'
-	print mail_text
-	print sms_text
+
+	sendmail.send(mailtext)
+	sendsms.send(smstext)
+	#print mail_text
+	#print sms_text
+
 
 	targets = [data[0] for data in datas]
 	targets = list(set(targets))
