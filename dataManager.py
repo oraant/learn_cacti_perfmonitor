@@ -47,7 +47,7 @@ for node in conf.sections():
 		logger.debug("Got connection and cursor from " + node)
 	else:
 		dmHandler.delNode(cursor,node)
-		logger.warning("Connect failed with " + node + ", deleted datas from rawdata_last table.\nReason is : " + result[1])
+		logger.warning("Connect failed with " + node + ", deleted datas from rawdata_last table.\n\tReason is : " + result[1])
 		continue
 
 

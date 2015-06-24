@@ -48,7 +48,7 @@ for node in conf.sections():
 		cursor = db.cursor()
 		logger.debug("Got connection and cursor from " + node)
 	else:
-		logger.warning("Connect failed with " + node + ". \nReason is : " + result[1])
+		logger.warning("Connect failed with " + node + ". \n\tReason is : " + result[1])
 		continue
 	
 	
