@@ -133,7 +133,7 @@ def basicNode(flag,conf,node):
 
 	enable = decrypt(conf.get(node,'enable')).upper()
 	if enable != 'TRUE':
-		return False,'not enable, value about enable of this node is ' + enable
+		return False,'not enable, value about enable of this node is ' + enable + '. Or the configure file did not encrypted.'
 
 
 	tnsname = decrypt(conf.get(node,'tnsname')).lower()
