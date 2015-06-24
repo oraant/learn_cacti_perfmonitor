@@ -98,6 +98,7 @@ logger.debug(' ------ Loop end.')
 local_data.close()
 
 if sms_db_count == 0:
+	logger.debug("sms_db_count = 0,nothing to report,out.\n")
 	exit(0)
 
 
