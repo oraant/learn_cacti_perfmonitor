@@ -37,7 +37,7 @@ def send(string):
 
 	for target in targets:
 		logger.debug('Try to send sms to ' + target)
-		command = "echo '" + string + "'|/usr/local/bin/gnokii --sendsms " + target
+		command = 'echo "' + string + '"|/usr/local/bin/gnokii --sendsms "' + target
 		(status,output) = commands.getstatusoutput(command)
 
 		if status == 0:
