@@ -77,3 +77,4 @@ CREATE OR REPLACE
     utl_file.fclose(v_file_cur);
     RETURN('true');
   END to_file;
+/
