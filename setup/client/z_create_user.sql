@@ -1,9 +1,6 @@
 create user cismon identified by cismon;
 grant connect to cismon;
 
-create user cismon identified by cismon;
-grant connect to cismon;
-
 --history
 grant select on dba_hist_snapshot to cismon;
 grant select on DBA_HIST_SYS_TIME_MODEL to cismon;
