@@ -1,3 +1,6 @@
+client:
 baseline统一都叫做perfbl
+
+server:
 记得在main.sh里配置要将报告发送给谁
 记得创建/cismon/datas目录
