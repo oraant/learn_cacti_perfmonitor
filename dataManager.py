@@ -136,7 +136,7 @@ if len(datas) != 0:
 	logger.debug("Got alert,sending mail, sms and reports.")
 
 	mail_text = '中研软Perfmonitor性能预警平台发来报告：\n'
-	smstext = 'Perfmonitor阈值告警功能：\\n'
+	smstext = '数据库参数告警功能：\\n'
 	for data in datas:
 		mail_text += '节点：%-20s参数：%-50s当前的值：%-15.2f告警值：%-15.2f\n'%(data[0],data[1],data[2],data[3])
 	
