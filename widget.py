@@ -24,6 +24,7 @@ def getConf(flag):
 
 def getLogger(flag):
 	path_conf_global = sys.path[0] + '/conf/global.conf'
+	path_log  = sys.path[0] + '/log/' + flag + '.log'
 	cf_global = ConfigParser.ConfigParser()
 	cf_global.read(path_conf_global)
 	log_level = cf_global.getint('server','log_level')
