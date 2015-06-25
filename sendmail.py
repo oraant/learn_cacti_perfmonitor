@@ -12,10 +12,6 @@ from email.utils import parseaddr, formataddr
 from email.mime.multipart import MIMEMultipart
 
 
-#verify if this model can run
-if w.verifyEnable('sendmail') != True:
-	exit(0)
-
 
 #get base configure
 conf = w.conf
@@ -52,6 +48,11 @@ def report(text,attachments):
 
 #send mail just with messages
 def send(text):
+
+	#verify if this model can run
+	if w.verifyEnable('sendmail') != True:
+		return
+
 	mail_text = MIMEText(text,_charset='utf-8')
 	msg.attach(mail_text)
 	sendToTargets()

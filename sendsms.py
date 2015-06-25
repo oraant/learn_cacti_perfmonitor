@@ -6,10 +6,6 @@ import time
 import widget as w
 
 
-#verify if this model can run
-if w.verifyEnable('sendsms') != True:
-	exit(0)
-
 #get base configure
 logger = w.getLogger('sendsms')
 conf = w.conf
@@ -33,8 +29,12 @@ def verifyUsable():
 def send(string):
 	string = string.replace('"','\\\\\\\"')
 
+	#verify if this model can run
+	if w.verifyEnable('sendsms') != True:
+		return
+
 	if verifyUsable() != True:
-		exit(1)
+		return
 
 	for target in targets:
 		logger.debug('Try to send sms to ' + target)
