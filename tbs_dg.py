@@ -47,7 +47,7 @@ for node in conf.sections():
         cursor.execute(sql_for_dg)
         sql_dgs = cursor.fetchall()
         if len(sql_dgs) == 0:
-                logger.debug('did not get data from v$asm_diskgroup table,end this node')
+                logger.debug('did not get data from v$asm_diskgroup table.')
 	else:
 	        logger.debug('got datas from v$asm_diskgroup, now format it.')
 		#Ergodic every dg key-value in this node
@@ -71,7 +71,7 @@ for node in conf.sections():
         cursor.execute(sql_for_tbs)
         sql_tbss = cursor.fetchall()
         if len(sql_tbss) == 0:
-                logger.debug('did not get remote tablespace information,end this node')
+                logger.debug('did not get remote tablespace information.')
 	else:
         	logger.debug('got remote tablespace information, now format it.')
 		#Ergodic every tbs key-value in this node
