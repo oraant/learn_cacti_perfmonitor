@@ -60,7 +60,7 @@ for node in conf.sections():
 			except:
 				logger.error("Didn't get data from conf for " + sql_dg[0] + ", use default global_alert_value, node is " + node)
 				alert_value = global_alert_value
-			else:
+			finally:
 				if sql_dg[1] > alert_value:
 					dg_name = str(sql_dg[0])
 					dg_value = str(sql_dg[1])
@@ -85,7 +85,7 @@ for node in conf.sections():
 			except:
 				logger.error("Didn't get data from conf for " + sql_tbs[0] + ", use default global_alert_value, node is " + node)
 				alert_value = global_alert_value
-			else:
+			finally:
 				if sql_tbs[1] > alert_value:
 					tbs_name = str(sql_tbs[0])
 					tbs_value = str(sql_tbs[1])
