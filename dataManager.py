@@ -161,9 +161,9 @@ if len(datas) != 0:
 		command = '/perfmonitor/reports/main.sh ' + tnsname + ' ' + version + ' ' + inst_num + ' ' + base_line
 		(status,output) = commands.getstatusoutput(command)
 		if status != 0:
-			logger.error('can\'t send reports to ' + target + ', output is : ' + output)
+			logger.error('can\'t send reports for ' + target + ', output is : ' + output)
 		else:
-			logger.debug('send reports to ' + target )
+			logger.debug('send reports for ' + target)
 
 	logger.debug("Sending done.")
 else:
