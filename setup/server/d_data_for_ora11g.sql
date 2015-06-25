@@ -1,5 +1,5 @@
 --Drop the old datas
-delete from parameter_oracle10g;
+delete from parameter_oracle11g;
 commit;
 
 --DB
