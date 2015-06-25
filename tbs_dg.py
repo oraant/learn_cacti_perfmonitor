@@ -44,6 +44,7 @@ for node in conf.sections():
                 continue
 
         #Get information about remote disk group
+        logger.debug('begin fetch data from v$asm_diskgroup table.')
         cursor.execute(sql_for_dg)
         sql_dgs = cursor.fetchall()
         if len(sql_dgs) == 0:
@@ -68,6 +69,7 @@ for node in conf.sections():
 
 
         #Get information about remote tablespace
+        logger.debug('begin fetch data from tablespace table.')
         cursor.execute(sql_for_tbs)
         sql_tbss = cursor.fetchall()
         if len(sql_tbss) == 0:
