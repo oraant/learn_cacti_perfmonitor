@@ -61,3 +61,10 @@ grant all on sys.dba_alert_history to cismon;
 --verify
 grant all on sys.v_$database to cismon;
 grant all on sys.v_$instance to cismon;
+
+--tbs and asmdg
+grant all on sys.dba_data_files to cismon;
+grant all on sys.dba_free_space to cismon;
+grant all on sys.dba_temp_files to cismon;
+grant all on sys.v_$temp_space_header to cismon;
+grant all on sys.v_$asm_diskgroup to cismon;
