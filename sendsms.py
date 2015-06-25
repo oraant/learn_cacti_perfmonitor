@@ -8,7 +8,7 @@ import widget as w
 
 #verify if this model can run
 if w.verifyEnable('sendsms') != True:
-        exit(0)
+	exit(0)
 
 #get base configure
 logger = w.getLogger('sendsms')
