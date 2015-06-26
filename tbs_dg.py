@@ -101,13 +101,14 @@ for node in conf.sections():
 logger.debug(' ------ Loop end.')
 
 #Send mail and sms
-logger.debug("Program end,send mail and sms.\n")
 if send == True:
-        mailtext += '\n\n有任何疑问请联系北京中研软科技有限公司。\n公司网址：www.chinaitsoft.com'
-        smstext = mailtext
+	logger.debug("found alert value,send mail and sms.\n")
+	mailtext += '\n\n有任何疑问请联系北京中研软科技有限公司。\n公司网址：www.chinaitsoft.com'
+	smstext = mailtext
+	sendmail.send(mailtext)
+	sendsms.send(smstext)
 
-sendmail.send(mailtext)
-sendsms.send(smstext)
+logger.debug("Program end.exit")
 
 #print mailtext
 #print '---'
