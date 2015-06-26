@@ -1,5 +1,6 @@
-k/
+rm -rf bak/
 rm -rf tmp/
+rm -rf .git/
 
 rm -rf datas/*
 rm -rf dbm/*
