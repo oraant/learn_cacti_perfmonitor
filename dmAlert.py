@@ -70,10 +70,10 @@ def getDynamic(cursor):
 	         group by target_name, param_name)
 	'''
 
-	#cursor.execute(sql_get_last_month)
-	#cursor.execute(sql_get_last_week)
-	cursor.execute(sql_get_last_hour)
-	cursor.execute(sql_get_last_hour2)
+	cursor.execute(sql_get_last_month)
+	cursor.execute(sql_get_last_week)
+	#cursor.execute(sql_get_last_hour)
+	#cursor.execute(sql_get_last_hour2)
 	cursor.execute('commit')
 
 
