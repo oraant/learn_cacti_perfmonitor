@@ -25,3 +25,5 @@ python crypto.py -c widget.py
 rm -f *.c
 rm -f *.pyc
 rm -f dmAlert.py dmCapture.py dmHandler.py sendmail.py sendsms.py widget.py
+
+tar -zcf perfmonitor.tar.gz perfmonitor
