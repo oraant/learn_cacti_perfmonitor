@@ -13,5 +13,6 @@ export LD_LIBRARY_PATH
 export NLS_LANG='SIMPLIFIED CHINESE_CHINA.AL32UTF8'
 
 
-sleep 20;/usr/bin/python /perfmonitor/dataManager.py 1>>/perfmonitor/run.log 2>>/perfmonitor/run.err
-sleep 10;/usr/bin/python /perfmonitor/tbs_dg.py 1>>/perfmonitor/run.log 2>>/perfmonitor/run.err
+date >> /perfmonitor/run.log
+sleep 20;/usr/bin/python /perfmonitor/dataManager.py 1>>/perfmonitor/run.log 2>>&1
+sleep 10;/usr/bin/python /perfmonitor/tbs_dg.py 1>>/perfmonitor/run.log 2>>&1
