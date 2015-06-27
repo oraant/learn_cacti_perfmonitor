@@ -17,8 +17,8 @@ commit;
 insert /*+append*/ into parameter_oracle10g values (9,2,'Parse',1,'parse time elapsed','aggregate','1000');
 insert /*+append*/ into parameter_oracle10g values (10,2,'Parse',2,'parse time cpu','aggregate','1000');
 insert /*+append*/ into parameter_oracle10g values (11,2,'Parse',3,'parse count (hard)','aggregate','600');
-insert /*+append*/ into parameter_oracle10g values (12,2,'Parse',4,'session cursor cache count','current','600');
-insert /*+append*/ into parameter_oracle10g values (13,2,'Parse',5,'session cursor cache hits','current','600');
+insert /*+append*/ into parameter_oracle10g values (12,2,'Parse',4,'placeholder1','current','1');
+insert /*+append*/ into parameter_oracle10g values (13,2,'Parse',5,'placeholder2','current','1');
 insert /*+append*/ into parameter_oracle10g values (14,2,'Parse',6,'parse count (failures)','aggregate','600');
 commit;
 
