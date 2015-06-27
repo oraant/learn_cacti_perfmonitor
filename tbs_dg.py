@@ -108,7 +108,7 @@ if send == True:
 	sendmail.send(mailtext)
 	sendsms.send(smstext)
 
-logger.debug("Program end.exit")
+logger.debug("Program end.exit\n")
 
 #print mailtext
 #print '---'
