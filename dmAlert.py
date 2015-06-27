@@ -38,7 +38,7 @@ def getDynamic(cursor):
 	         where update_time >=
 	               sysdate - to_dsinterval('P7D') - to_dsinterval('PT30M')
 	           and update_time <=
-	               sysdate - to_dsinterval('P7D') - to_dsinterval('PT30M')
+	               sysdate - to_dsinterval('P7D') + to_dsinterval('PT30M')
 	           and alert_10min.target_name = calvalue_arch.target_name
 	           and alert_10min.param_name = calvalue_arch.param_name
 	         group by target_name, param_name)
