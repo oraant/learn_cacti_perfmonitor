@@ -104,8 +104,9 @@ logger.debug(' ------ Loop end.')
 if send == True:
 	logger.debug("found alert value,send mail and sms.\n")
 	mailtext += '\n\n有任何疑问请联系北京中研软科技有限公司。\n公司网址：www.chinaitsoft.com'
+	mailsub = 'Oracle表空间及ASMDG告警'
 	smstext = mailtext
-	sendmail.send(mailtext)
+	sendmail.send(mailsub,mailtext)
 	sendsms.send(smstext)
 
 logger.debug("Program end.exit\n")

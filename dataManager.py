@@ -131,20 +131,21 @@ datas = dmAlert.getAlert(cursor)
 logger.debug("Generate dynamic alert value, and get parameter values that bigger than alert value.")
 
 
+mailsub = 'Oracle性能参数告警'
 #format alert report
 if len(datas) != 0:
 	logger.debug("Got alert,sending mail, sms and reports.")
 
-	mail_text = '中研软Perfmonitor性能预警平台发来报告：\n'
+	mailtext = '中研软Perfmonitor性能预警平台发来报告：\n'
 	smstext = '数据库参数告警功能：\\n'
 	for data in datas:
-		mail_text += '节点：%-20s参数：%-50s当前的值：%-15.2f告警值：%-15.2f\n'%(data[0],data[1],data[2],data[3])
+		mailtext += '节点：%-20s参数：%-50s当前的值：%-15.2f告警值：%-15.2f\n'%(data[0],data[1],data[2],data[3])
 	
 	smstext += '本次检测，发现共' + str(len(datas)) + '个参数超过警戒值。\\n详细内容已发送至您的邮箱。'
 
-	sendmail.send(mail_text)
+	sendmail.send(mailsub,mailtext)
 	sendsms.send(smstext)
-	#print mail_text
+	#print mailtext
 	#print smstext
 
 

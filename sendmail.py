@@ -40,14 +40,14 @@ def getatt(attachment):
 	return att
 
 #send mail with attachments
-def report(text,attachments):
+def report(subject,text,attachments):
 	for attachment in attachments:
 		att = getatt(attachment)
 		msg.attach(att)
-	send(text)
+	send(subject,text)
 
 #send mail just with messages
-def send(text):
+def send(subject,text):
 
 	#verify if this model can run
 	if w.verifyEnable('sendmail') != True:
@@ -55,6 +55,9 @@ def send(text):
 
 	mail_text = MIMEText(text,_charset='utf-8')
 	msg.attach(mail_text)
+
+	msg['Subject'] = Header(subject,'utf-8').encode()
+
 	sendToTargets()
 
 #connect to server and send mail to targets
@@ -63,8 +66,8 @@ def sendToTargets():
 	server.set_debuglevel(0)
 	server.login(mail_from, mail_pass)
 
-	msg['From'] = _format_addr(u'中研软perfmonitor性能预警平台 <%s>' % mail_from)
-	msg['Subject'] = Header(u'产品运行报告', 'utf-8').encode()
+	msg['From'] = _format_addr(u'中研软数据库运维预警监控平台 <%s>' % mail_from)
+	#msg['Subject'] = Header(u'产品运行报告', 'utf-8').encode()
 
 	for target in targets:
 		msg['To'] = _format_addr(u'产品用户 <%s>' % target)

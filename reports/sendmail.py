@@ -66,8 +66,8 @@ print '------------------------'
 print msg
 
 msg['From'] = _format_addr(u'中研软数据库运维预警监控平台 <%s>' % from_addr)
-msg['To'] = _format_addr(u'管理员 <%s>' % to_addr)
-msg['Subject'] = Header(u'警告，数据库有参数超过阀值', 'utf-8').encode()
+msg['To'] = _format_addr(u'产品用户 <%s>' % to_addr)
+msg['Subject'] = Header(u'数据库性能诊断报告', 'utf-8').encode()
 print '------------------------'
 print msg
 
