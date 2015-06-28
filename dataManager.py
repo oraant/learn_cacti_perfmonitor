@@ -153,8 +153,8 @@ if len(datas) != 0:
 	logger.debug('hosts need to generate reports is : ' + str(targets))
 	for target in targets:
 		tnsname = w.decrypt(conf.get(target,'tnsname'))
-		param_table = w.decrypt(conf.get(target,'param_table'))
-		version = param_table[-3:-1]
+		pathname = w.decrypt(conf.get(target,'pathname'))
+		version = pathname[-3:-1]
 		inst_num = w.decrypt(conf.get(target,'instance_num'))
 		base_line = 'perfbl'
 
