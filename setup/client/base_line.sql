@@ -11,6 +11,6 @@ end;
 
 
 begin
- dbms_workload_repository.drop_baseline(baseline_name => 'perfbl',cascade => true);
+ dbms_workload_repository.drop_baseline(baseline_name => 'perfbl',cascade => false);
 end;
 /
