@@ -13,5 +13,4 @@ export LD_LIBRARY_PATH
 export NLS_LANG='SIMPLIFIED CHINESE_CHINA.AL32UTF8'
 
 
-date >> /perfmonitor/run.log
-/usr/bin/python /perfmonitor/threshold.py 1>>/perfmonitor/run.log 2>&1
+/usr/bin/python /perfmonitor/threshold.py 1>>/perfmonitor/run.log 2>&1 || echo -e "`date` \n" >>/perfmonitor/log/reports.err
