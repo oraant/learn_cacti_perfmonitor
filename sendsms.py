@@ -44,6 +44,8 @@ def send(string):
 
 		if status == 0:
 			logger.debug('Message has send successful.')
+		elif status == 8:
+			logger.error('Maybe the balance of SIM card is not enough. \n\toutput is : ' + output)
 		elif status == 11:
 			logger.error('Time out, please move the movecom! \n\toutput is : ' + output)
 		elif status == 27:
