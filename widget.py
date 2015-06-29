@@ -23,14 +23,12 @@ def getConf(flag):
 	return cf
 
 def getLogger(flag):
-	path_conf_global = sys.path[0] + '/conf/global.conf'
-	path_log  = sys.path[0] + '/log/' + flag + '.log'
-	cf_global = ConfigParser.ConfigParser()
-	cf_global.read(path_conf_global)
+	cf_global = getConf('global')
 	log_level = cf_global.getint('server','log_level')
 
-	formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(name)s -- %(message)s')
+	path_log  = sys.path[0] + '/log/' + flag + '.log'
 	fh = logging.FileHandler(path_log)
+	formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(name)s -- %(message)s')
 	fh.setFormatter(formatter)
 
 	logger = logging.getLogger(flag)
@@ -73,8 +71,8 @@ def encrypt(string):
 
 
 #get slink from config file
-conf,tmp_data,logger = getFiles('global')
-tmp_data.close()
+conf = getConf('global')
+logger = getLogger('global')
 
 def getServer():
 	slink = conf.get('server','slink')
