@@ -97,7 +97,7 @@ def getValue(data,key,default):
 			return data[i]
 	return default
 
-def closeNode(conf_path,node,reason):
+def closeNode(conf_path,node,reason,flag):
 	print 'closing node'
 	cf = ConfigParser.ConfigParser()
 	cf.read(conf_path)
@@ -106,7 +106,11 @@ def closeNode(conf_path,node,reason):
 	cf.write(open(conf_path,"w"))
 
 	import sendmail
-	sendmail.send('产品运行报告',reason)
+	import sendsms
+	text = '模块 ' + flag + ' 已将节点 ' + node + ' 关闭，原因如下：\n'
+	text += reason
+	sendmail.send('产品运行报告',text)
+	sendsms.send(text)
 
 def basicNode(flag,node,node_conf,node_data):
 	data = node_data
@@ -127,7 +131,7 @@ def basicNode(flag,node,node_conf,node_data):
 		failCount = int(getValue(data,key_string,'0')) + 1
 		if failCount >= 3:
 			reason = 'Connection with ' + node + ' failed three times, closing node.'
-			closeNode(conf_path,node,reason)
+			closeNode(conf_path,node,reason,flag)
 			return False,reason
 		data[key_string] = str(failCount)
 
@@ -146,7 +150,7 @@ def basicNode(flag,node,node_conf,node_data):
 	dbid_conf = decrypt(conf.get(node,'dbid')).lower()
 	if dbid_node != dbid_conf:
 		reason = 'The dbid of ' + node + ' is wrong, closing node.'
-		closeNode(conf_path,node,reason)
+		closeNode(conf_path,node,reason,flag)
 		return False,reason
 
 	cursor.execute(sql_inum)
@@ -154,7 +158,7 @@ def basicNode(flag,node,node_conf,node_data):
 	inum_conf = decrypt(conf.get(node,'instance_num')).lower()
 	if inum_node != inum_conf:
 		reason = 'The instance number of ' + node + ' is wrong, closing node.'
-		closeNode(conf_path,node,reason)
+		closeNode(conf_path,node,reason,flag)
 		return False,reason
 
 	return True,db
