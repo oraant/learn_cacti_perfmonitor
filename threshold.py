@@ -14,7 +14,7 @@ import sendsms
 if w.verifyEnable('threshold') != True:
 	exit(1)
 
-conf,local_data,logger = w.getFiles('getThreshold')
+conf,data,logger = w.getFiles('getThreshold')
 logger.debug(" ====== Model start. ====== ")
 
 
@@ -44,7 +44,7 @@ for node in conf.sections():
 
 	#connect with node
 	logger.debug(" ------ Enter into loop,node is " + node + " ------ ")
-	result = w.basicNode('getThreshold',conf,node)
+	result = w.basicNode('getThreshold',node,conf,data)
 	if result[0] == True:
 		db = result[1]
 		cursor = db.cursor()
@@ -67,15 +67,15 @@ for node in conf.sections():
 
 	#get last latest update time saved in dbm file
 	key_string = node + 'last_latest'
-	last_latest = w.getValue(local_data,key_string,'1000-01-01 01:01:01.000009 +08:00')
+	last_latest = w.getValue(data,key_string,'1000-01-01 01:01:01.000009 +08:00')
 	logger.debug("the last latest update time in dbm file with " + node + " is : " + last_latest)
-	local_data[key_string] = this_latest
+	data[key_string] = this_latest
 
 
 	#get alerts from node which update time between last latest update time and latest update time,and appear in five minutes.
 	cursor.execute(sql_report,this_latest = this_latest,last_latest = last_latest)
-	datas = cursor.fetchall()
-	if len(datas) == 0:
+	alerts = cursor.fetchall()
+	if len(alerts) == 0:
 		logger.debug('did not get data from dba_outstanding_alerts table,end this node')
 		continue
 
@@ -85,19 +85,19 @@ for node in conf.sections():
 	tnsname = w.decrypt(conf.get(node,'tnsname'))
 	mailtext += '\n产生告警的库的连接是：' + tnsname + '\n'
 	sms_db_count += 1
-	for data in datas:
-		mailtext += '报警的实例号：' + str(data[0]) + '\n'
-		mailtext += '报警的序号：' + str(data[1]) + '\n'
-		mailtext += '报警级别: ' + str(data[2]) + '\n'
-		mailtext += '报警原因：' + str(data[3]) + '\n'
-		mailtext += '报警产生时间：' + str(data[4]) + '\n'
-		mailtext += '报警最后更新时间：' + str(data[5]) + '\n\n'
+	for alert in alerts:
+		mailtext += '报警的实例号：' + str(alert[0]) + '\n'
+		mailtext += '报警的序号：' + str(alert[1]) + '\n'
+		mailtext += '报警级别: ' + str(alert[2]) + '\n'
+		mailtext += '报警原因：' + str(alert[3]) + '\n'
+		mailtext += '报警产生时间：' + str(alert[4]) + '\n'
+		mailtext += '报警最后更新时间：' + str(alert[5]) + '\n\n'
 		sms_rept_count += 1
 
 
 #loop end,verify if captured data
 logger.debug(' ------ Loop end.')
-local_data.close()
+data.close()
 
 if sms_db_count == 0:
 	logger.debug("sms_db_count = 0,nothing to report,out.\n")

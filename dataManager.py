@@ -18,7 +18,7 @@ import commands
 if w.verifyEnable('datamanager') != True:
 	exit(1)
 
-conf,local_data,logger = w.getFiles('getOracle')
+conf,data,logger = w.getFiles('getOracle')
 logger.debug(" ====== Model start. ====== ")
 
 try:
@@ -26,7 +26,7 @@ try:
 	cursor = server.cursor()
 except:
 	logger.critical("Can't connect with server")
-	local_data.close()
+	data.close()
 	exit(1)
 
 
@@ -42,7 +42,7 @@ for node in conf.sections():
 
 	#connect with node
 	logger.debug(" ------ Enter into loop,node is " + node + " ------ ")
-	result = w.advancedNode('getOracle',conf,node)
+	result = w.advancedNode('getOracle',node,conf,data)
 	if result[0] == True:
 		node_db = result[1]
 		node_cursor = node_db.cursor()
@@ -113,7 +113,7 @@ if capture_counter == 0:
 	logger.debug("capture counter = 0, close connection and cursor with server, exit program.\n")
 	cursor.close()
 	server.close()
-	local_data.close()
+	data.close()
 	exit(0)
 
 if calculate_counter == 0:
@@ -121,27 +121,27 @@ if calculate_counter == 0:
 	dmHandler.end(cursor)
 	cursor.close()
 	server.close()
-	local_data.close()
+	data.close()
 	exit(0)
 
 
 #get alert report
 dmAlert.getDynamic(cursor)
-datas = dmAlert.getAlert(cursor)
+alerts = dmAlert.getAlert(cursor)
 logger.debug("Generate dynamic alert value, and get parameter values that bigger than alert value.")
 
 
 mailsub = 'Oracle性能参数告警'
 #format alert report
-if len(datas) != 0:
+if len(alerts) != 0:
 	logger.debug("Got alert,sending mail, sms and reports.")
 
 	mailtext = '中研软Perfmonitor性能预警平台发来报告：\n'
 	smstext = '数据库参数告警功能：\\n'
-	for data in datas:
-		mailtext += '节点：%-20s参数：%-50s当前的值：%-15.2f告警值：%-15.2f\n'%(data[0],data[1],data[2],data[3])
+	for alert in alerts:
+		mailtext += '节点：%-20s参数：%-50s当前的值：%-15.2f告警值：%-15.2f\n'%(alert[0],alert[1],alert[2],alert[3])
 	
-	smstext += '本次检测，发现共' + str(len(datas)) + '个参数超过警戒值。\\n详细内容已发送至您的邮箱。'
+	smstext += '本次检测，发现共' + str(len(alerts)) + '个参数超过警戒值。\\n详细内容已发送至您的邮箱。'
 
 	sendmail.send(mailsub,mailtext)
 	sendsms.send(smstext)
@@ -149,7 +149,7 @@ if len(datas) != 0:
 	#print smstext
 
 
-	targets = [data[0] for data in datas]
+	targets = [alert[0] for alert in alerts]
 	targets = list(set(targets))
 	logger.debug('hosts need to generate reports is : ' + str(targets))
 	for target in targets:
@@ -176,5 +176,5 @@ logger.debug("Archive datas with end function. Close connection and cursor with 
 dmHandler.end(cursor)
 cursor.close()
 server.close()
-local_data.close()
+data.close()
 exit(0)

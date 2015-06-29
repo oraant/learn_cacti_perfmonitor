@@ -14,8 +14,7 @@ import sendsms
 if w.verifyEnable('tbs_dg') != True:
 	exit(1)
 
-conf,local_data,logger = w.getFiles('getTbs_dg')
-local_data.close()
+conf,data,logger = w.getFiles('getTbs_dg')
 logger.debug(" ====== Model start. ====== ")
 
 #Define sql text to get remote data
@@ -34,7 +33,7 @@ for node in conf.sections():
 
         #Connect with node
         logger.debug(" ------ Enter into loop,node is " + node + " ------ ")
-        result = w.basicNode('getTbs_dg',conf,node)
+        result = w.basicNode('getTbs_dg',node,conf,data)
         if result[0] == True:
                 db = result[1]
                 cursor = db.cursor()
@@ -104,6 +103,7 @@ for node in conf.sections():
 
 #Loop end
 logger.debug(' ------ Loop end.')
+data.close()
 
 #Send mail and sms
 if send == True:

@@ -39,27 +39,9 @@ def getLogger(flag):
 	
 
 def getFiles(flag):
-	path_conf_global = sys.path[0] + '/conf/global.conf'
-	path_conf = sys.path[0] + '/conf/' + flag + '.conf'
-	path_log  = sys.path[0] + '/log/' + flag + '.log'
-	path_dbm  = sys.path[0] + '/dbm/' + flag
-
-	cf_global = ConfigParser.ConfigParser()
-	cf_global.read(path_conf_global)
-	log_level = cf_global.getint('server','log_level')
-
-	cf = ConfigParser.ConfigParser()
-	cf.read(path_conf)
-
-	formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(name)s -- %(message)s')
-	fh = logging.FileHandler(path_log)
-	fh.setFormatter(formatter)
-
-	logger = logging.getLogger(flag)
-	logger.setLevel(log_level)
-	logger.addHandler(fh)
-
-	data = dbm.open(path_dbm,'c')
+	cf = getConf(flag)
+	data = getDbm(flag)
+	logger = getLogger(flag)
 	return cf,data,logger
 
 
@@ -124,8 +106,9 @@ def closeNode(conf_path,node):
 	cf.write(open(conf_path,"w"))
 
 
-def basicNode(flag,conf,node):
-	data = getDbm('global')
+def basicNode(flag,node,node_conf,node_data):
+	data = node_data
+	conf = node_conf
 	conf_path = sys.path[0] + '/conf/' + flag + '.conf'
 	key_string = flag + node + 'failCount'
 
@@ -145,7 +128,7 @@ def basicNode(flag,conf,node):
 			return False,'connection failed three times,closing node'
 		data[key_string] = str(failCount)
 
-		logger.error('can\'t connect to node,error is : ' + str(sys.exc_info()) + '.\nDetail is : ' + str(sys.exc_info()[1]))
+		logger.error('can\'t connect to node,node is : ' + node + ', error is : ' + str(sys.exc_info()) + '.\nDetail is : ' + str(sys.exc_info()[1]))
 		return False,'connection failed'
 	else:
 		data[key_string] = '0'
@@ -169,20 +152,19 @@ def basicNode(flag,conf,node):
 		closeNode(conf_path,node)
 		return False,'instance number is wrong' 
 
-	data.close()
 	return True,db
 
 
 #verify a node link in advanced mode
-def advancedNode(flag,conf,node):
-	result = basicNode(flag,conf,node)
+def advancedNode(flag,node,node_conf,node_data):
+        result = basicNode(flag,node,node_conf,node_data)
 	if result[0] == True:
 		db = result[1]
 	else:
 		return False,result[1]
 
-	data = getDbm('global')
 
+	data = node_data
 	key_string = flag + node + 'lasCall'
 	lastcall = float(getValue(data,key_string,'0'))
 	nowtime = time.time()
@@ -200,4 +182,3 @@ def advancedNode(flag,conf,node):
 		return False,'running time less than 10min,running time is : ' + str(running_time)
 	else:
 		return True,db
-	data.close()
