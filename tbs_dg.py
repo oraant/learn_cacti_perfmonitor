@@ -47,12 +47,12 @@ for node in conf.sections():
         logger.debug('begin fetch data from v$asm_diskgroup table.')
         cursor.execute(sql_for_dg)
         sql_dgs = cursor.fetchall()
+	mailtemp = ''
         if len(sql_dgs) == 0:
                 logger.debug('did not get data from v$asm_diskgroup table.')
 	else:
 	        logger.debug('got datas from v$asm_diskgroup, now format it.')
 		#Ergodic every dg key-value in this node
-		mailtext += '节点：' + node + '的asm磁盘使用情况：\n'
 	        for sql_dg in sql_dgs:
 	         	#Contrast the current value with pre-define value in configure file       
 	                try:
@@ -64,20 +64,22 @@ for node in conf.sections():
 				if sql_dg[1] > alert_value:
 					dg_name = str(sql_dg[0])
 					dg_value = str(sql_dg[1])
-					mailtext += '\tASM磁盘：' + dg_name + ' 的使用率为：' + dg_value + ' ，超出预设的：' + str(alert_value) + '%\n'
+					mailtemp += '\tASM磁盘：' + dg_name + ' 的使用率为：' + dg_value + ' ，超出预设的：' + str(alert_value) + '%\n'
 				        send = True
-
+	if mailtemp != '':
+		mailtext += '节点：' + node + '的asm磁盘使用情况：\n'
+		mailtext += mailtemp
 
         #Get information about remote tablespace
         logger.debug('begin fetch data from tablespace table.')
         cursor.execute(sql_for_tbs)
         sql_tbss = cursor.fetchall()
+	mailtemp = ''
         if len(sql_tbss) == 0:
                 logger.debug('did not get remote tablespace information.')
 	else:
         	logger.debug('got remote tablespace information, now format it.')
 		#Ergodic every tbs key-value in this node
-		mailtext += '节点：' + node + '的表空间使用情况：\n'
 	        for sql_tbs in sql_tbss:
 	      		#Contrast the current value with pre-define value in configure file      
 	                try:
@@ -89,8 +91,11 @@ for node in conf.sections():
 				if sql_tbs[1] > alert_value:
 					tbs_name = str(sql_tbs[0])
 					tbs_value = str(sql_tbs[1])
-					mailtext += '\t表空间：' + tbs_name + ' 的使用率为：' + tbs_value + ' ，超出预设的：' + str(alert_value) + '%\n'
+					mailtemp += '\t表空间：' + tbs_name + ' 的使用率为：' + tbs_value + ' ，超出预设的：' + str(alert_value) + '%\n'
 					send = True
+	if mailtemp != '':
+		mailtext += '节点：' + node + '的表空间使用情况：\n'
+		mailtext += mailtemp
 				                        
 	#Close connection and cursor for this node
 	cursor.close()
@@ -102,7 +107,7 @@ logger.debug(' ------ Loop end.')
 
 #Send mail and sms
 if send == True:
-	logger.debug("found alert value,send mail and sms.\n")
+	logger.debug("found alert value,send mail and sms.")
 	mailtext += '\n\n有任何疑问请联系北京中研软科技有限公司。\n公司网址：www.chinaitsoft.com'
 	mailsub = 'Oracle表空间及ASMDG告警'
 	smstext = mailtext
