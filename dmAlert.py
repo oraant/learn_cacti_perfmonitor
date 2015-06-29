@@ -19,7 +19,7 @@ def getDynamic(cursor):
 	sql_get_last_month = '''
 	update alert_10min
 	   set last_month =
-	       (select max(param_value)*1.3
+	       (select max(param_value)
 	          from calvalue_arch
 	         where update_time >=
 	               sysdate - to_yminterval('P1M') - to_dsinterval('PT30M')
@@ -33,7 +33,7 @@ def getDynamic(cursor):
 	sql_get_last_week = '''
 	update alert_10min
 	   set last_week =
-	       (select max(param_value)*1.3
+	       (select max(param_value)
 	          from calvalue_arch
 	         where update_time >=
 	               sysdate - to_dsinterval('P7D') - to_dsinterval('PT30M')
@@ -78,7 +78,7 @@ def getDynamic(cursor):
 
 
 #get current value and compare with alert value
-def getAlert(cursor):
+def getAlert(cursor,scale):
 	sql_get_alert = '''
 	select *
 	  from (select a.target_name,
@@ -107,9 +107,9 @@ def getAlert(cursor):
 	          join calvalue_10min c
 	            on a.target_name = c.target_name
 	           and a.param_name = c.param_name)
-	 where param_value > alert_value
+	 where param_value > alert_value * :value_scale
 	 order by target_name
 	'''
-	cursor.execute(sql_get_alert)
+	cursor.execute(sql_get_alert,value_scale = scale)
 	datas = cursor.fetchall()
 	return datas

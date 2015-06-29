@@ -126,8 +126,9 @@ if calculate_counter == 0:
 
 
 #get alert report
+scale = float(w.conf.get('getOracle','scale'))
 dmAlert.getDynamic(cursor)
-alerts = dmAlert.getAlert(cursor)
+alerts = dmAlert.getAlert(cursor,scale)
 logger.debug("Generate dynamic alert value, and get parameter values that bigger than alert value.")
 
 
