@@ -166,7 +166,7 @@ def basicNode(flag,node,node_conf,node_data):
 
 #verify a node link in advanced mode
 def advancedNode(flag,node,node_conf,node_data):
-        result = basicNode(flag,node,node_conf,node_data)
+	result = basicNode(flag,node,node_conf,node_data)
 	if result[0] == True:
 		db = result[1]
 	else:
