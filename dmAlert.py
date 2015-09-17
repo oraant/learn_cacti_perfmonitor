@@ -84,7 +84,7 @@ def getAlert(cursor,scale):
 	  from (select a.target_name,
 	               a.param_name,
 	               c.param_value,
-	               case nvl(a.flag, 'last_time')
+	               case nvl(a.flag, 'manul_value')
 	                 when 'manul_value' then
 	                  a.manul_value
 	                 when 'last_month' then
