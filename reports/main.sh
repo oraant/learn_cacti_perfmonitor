@@ -32,12 +32,12 @@ python /perfmonitor/reports/sendmail.py \
 -m "数据库 $link 的相关报告已生成。
 报告内容共 AWR, AWR_DIFF, ASH, ADDM, STA, TOP_SQL 六项，详情请见附件。
 若有疑问，请直接将邮件转发给中研软科技有限公司。"
-/home/oracle/awrrpt_$filename.txt \
-/home/oracle/ashrpt_$filename.txt \
-/home/oracle/awrdiff_$filename.txt \
-/home/oracle/top_sql_elps_$filename.txt \
-/home/oracle/sta_$filename.txt \
-/home/oracle/addm_$filename.txt \
+"/home/oracle/awrrpt_$filename.txt" \
+"/home/oracle/ashrpt_$filename.txt" \
+"/home/oracle/awrdiff_$filename.txt" \
+"/home/oracle/top_sql_elps_$filename.txt" \
+"/home/oracle/sta_$filename.txt" \
+"/home/oracle/addm_$filename.txt" \
 > /dev/null \
 2>>/perfmonitor/log/reports.err \
 || echo -e "`date`\n${link}\n" >>/perfmonitor/log/reports.err
