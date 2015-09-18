@@ -31,7 +31,7 @@ python /perfmonitor/reports/sendmail.py \
 -t zyrmail@perfm.mail \
 -m "数据库 $link 的相关报告已生成。
 报告内容共 AWR, AWR_DIFF, ASH, ADDM, STA, TOP_SQL 六项，详情请见附件。
-若有疑问，请直接将邮件转发给中研软科技有限公司。"
+若有疑问，请直接将邮件转发给中研软科技有限公司。" \
 "/home/oracle/awrrpt_$filename.txt" \
 "/home/oracle/ashrpt_$filename.txt" \
 "/home/oracle/awrdiff_$filename.txt" \
