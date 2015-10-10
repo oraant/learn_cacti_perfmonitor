@@ -115,4 +115,3 @@ sendsms.send(smstext)
 #print mailtext
 #print '---'
 #print smstext
-
